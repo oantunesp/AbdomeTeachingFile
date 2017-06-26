@@ -1,0 +1,427 @@
+newtable<-aggregate(totaltable, by = list(totaltable$ID), paste, collapse = ";")
+newtable<-newtable[,-2]
+#newtable eh exportavel para csv, pois nao tem virgulas
+write.csv(newtable, file = "newtable.csv")
+
+X1<-newtable
+
+X1$RelevantData<-iconv(X1$RelevantData, to='ASCII//TRANSLIT')
+X1$RelevantData<-tolower(X1$RelevantData)
+X1$Organ<-iconv(X1$Organ, to='ASCII//TRANSLIT')
+X1$Organ<-tolower(X1$Organ)
+
+###Setting dictionaries
+
+Rim<-c(" renal", "renais", "pielonefrite", " rim")
+Pancreas<- c("pancrea")
+Utero<- c("uter", "endometri")
+Ovarios<- c("ovari")
+Intestino<- c("intestin", "hernia", "colon", "diverticulo", "reto", "sigmoide", 
+              "Meckel", "ceco", "ascendente", "descendente")
+Escroto<- c("escrot", "testicu")
+Figado<- c("hepatic", "hcc", "chc", "figado", "cirrose")
+Prostata <- c("prostat")
+Adrenal<- c("adren")
+Bexiga <- c("vesica", "bexiga")
+Vias_biliares <- c("bili", "vesicula")
+Estomago<- c("gastr", "estomag")
+Baco<-c("baco", "esplen","ipmn")
+Gastrointestinal<-c("esofago", "alca", Estomago, Intestino, Figado, Vias_biliares, Pancreas, Baco)
+Genitourinario<-c(Rim, Bexiga, "ureter", "uretra", "feto", "placenta", "fetal", "sling", "penis", "vagina", "vulva")
+
+Inflamatorio<-c("inflamatorio", "ite", "crohn")
+Neoplasico<- c("neoplas", "tumor", "lesao", "nodul", "carcino", "cancer", "hcc", "chc", "cec ", " cec", "linfoma", "metastase", "leucemia", "mieloma", "mm")
+Vascular<- c("trombose", "aneurisma", "variz", "leriche", "aorta", "cava", "linfe", "linfa", "quilo", "vascul", "chiari", "arteria ")
+Variados<- c("simula", "pitfall", "curso", "artefato", "erro", "anatomic", "gigante", "estranho","didat", "barioma")
+Infeccioso<- c("abscesso", "colecao")
+Urgencia<- c("obstrucao", "agud", "emergencia", "hemorragia", "volvo")
+
+##########
+Groups<-c(Rim, Pancreas, Utero, Ovarios, Intestino, Escroto, Figado, Prostata, Adrenal, Bexiga,
+          Vias_biliares, Estomago, Baco, Gastrointestinal, Genitourinario, Inflamatorio, Neoplasico,
+          Vascular, Variados, Infeccioso, Urgencia)
+
+setgroup<-function(group){
+  i=1
+  for(i in 1:length(group)){
+    X1[group[i],5]=paste(X1[group[i],5], group, sep = ";")
+                         }
+                         }
+
+
+
+
+for(i in 1:length(RimP)){
+  if(X1[RimP[i],5]=="NA"){
+    X1[RimP[i],5]= "Rim"}else{
+      X1[RimP[i],5]= paste(X1[RimP[i],5], "Rim", sep = ";")
+    }
+}
+
+
+
+i=1
+RimP<-array()
+for(i in 1:length(Rim)){
+  RimP<<-c(RimP, grep(Rim[i], X1$RelevantData, ignore.case = T))
+}
+RimP<-RimP[-1]
+RimP<-(unique(RimP))
+########
+i=1
+PancreasP<-array()
+for(i in 1:length(Pancreas)){
+  PancreasP<<-c(PancreasP, grep(Pancreas[i], X1$RelevantData, ignore.case = T))
+}
+PancreasP<-PancreasP[-1]
+PancreasP<-(unique(PancreasP))
+########
+i=1
+UteroP<-array()
+for(i in 1:length(Utero)){
+  UteroP<<-c(UteroP, grep(Utero[i], X1$RelevantData, ignore.case = T))
+}
+UteroP<-UteroP[-1]
+UteroP<-(unique(UteroP))
+
+########
+i=1
+OvariosP<-array()
+for(i in 1:length(Ovarios)){
+  OvariosP<<-c(OvariosP, grep(Ovarios[i], X1$RelevantData, ignore.case = T))
+}
+OvariosP<-OvariosP[-1]
+OvariosP<-(unique(OvariosP))
+
+########
+i=1
+IntestinoP<-array()
+for(i in 1:length(Intestino)){
+  IntestinoP<<-c(IntestinoP, grep(Intestino[i], X1$RelevantData, ignore.case = T))
+}
+IntestinoP<-IntestinoP[-1]
+IntestinoP<-(unique(IntestinoP))
+
+########
+i=1
+EscrotoP<-array()
+for(i in 1:length(Escroto)){
+  EscrotoP<<-c(EscrotoP, grep(Escroto[i], X1$RelevantData, ignore.case = T))
+}
+EscrotoP<-EscrotoP[-1]
+EscrotoP<-(unique(EscrotoP))
+
+#######
+i=1
+FigadoP<-array()
+for(i in 1:length(Figado)){
+  FigadoP<<-c(FigadoP, grep(Figado[i], X1$RelevantData, ignore.case = T))
+}
+FigadoP<-FigadoP[-1]
+FigadoP<-(unique(FigadoP))
+
+######
+i=1
+ProstataP<-array()
+for(i in 1:length(Prostata)){
+  ProstataP<<-c(ProstataP, grep(Prostata[i], X1$RelevantData, ignore.case = T))
+}
+ProstataP<-ProstataP[-1]
+ProstataP<-(unique(ProstataP))
+######
+
+i=1
+AdrenalP<-array()
+for(i in 1:length(Adrenal)){
+  AdrenalP<<-c(AdrenalP, grep(Adrenal[i], X1$RelevantData, ignore.case = T))
+}
+AdrenalP<-AdrenalP[-1]
+AdrenalP<-(unique(AdrenalP))
+
+######
+i=1
+BexigaP<-array()
+for(i in 1:length(Bexiga)){
+  BexigaP<<-c(BexigaP, grep(Bexiga[i], X1$RelevantData, ignore.case = T))
+}
+BexigaP<-BexigaP[-1]
+BexigaP<-(unique(BexigaP))
+
+######
+i=1
+Vias_biliaresP<-array()
+for(i in 1:length(Vias_biliares)){
+  Vias_biliaresP<<-c(Vias_biliaresP, grep(Vias_biliares[i], X1$RelevantData, ignore.case = T))
+}
+Vias_biliaresP<-Vias_biliaresP[-1]
+Vias_biliaresP<-(unique(Vias_biliaresP))
+
+######
+i=1
+EstomagoP<-array()
+for(i in 1:length(Estomago)){
+  EstomagoP<<-c(EstomagoP, grep(Estomago[i], X1$RelevantData, ignore.case = T))
+}
+EstomagoP<-EstomagoP[-1]
+EstomagoP<-(unique(EstomagoP))
+
+######
+i=1
+BacoP<-array()
+for(i in 1:length(Baco)){
+  BacoP<<-c(BacoP, grep(Baco[i], X1$RelevantData, ignore.case = T))
+}
+BacoP<-BacoP[-1]
+BacoP<-(unique(BacoP))
+
+######
+i=1
+GastrointestinalP<-array()
+for(i in 1:length(Gastrointestinal)){
+  GastrointestinalP<<-c(GastrointestinalP, grep(Gastrointestinal[i], X1$RelevantData, ignore.case = T))
+}
+GastrointestinalP<-GastrointestinalP[-1]
+GastrointestinalP<-(unique(GastrointestinalP))
+
+######
+i=1
+GenitourinarioP<-array()
+for(i in 1:length(Genitourinario)){
+  GenitourinarioP<<-c(GenitourinarioP, grep(Genitourinario[i], X1$RelevantData, ignore.case = T))
+}
+GenitourinarioP<-GenitourinarioP[-1]
+GenitourinarioP<-(unique(GenitourinarioP))
+
+
+
+#Putting organ name into column
+#####
+i=1
+for(i in 1:length(RimP)){
+  if(X1[RimP[i],5]=="NA"){
+    X1[RimP[i],5]= "Rim"}else{
+      X1[RimP[i],5]= paste(X1[RimP[i],5], "Rim", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(PancreasP)){
+  if(X1[PancreasP[i],5]=="NA"){
+    X1[PancreasP[i],5]= "Pancreas"}else{
+      X1[PancreasP[i],5]= paste(X1[PancreasP[i],5], "Pancreas", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(UteroP)){
+  if(X1[UteroP[i],5]=="NA"){
+    X1[UteroP[i],5]= "Utero"}else{
+      X1[UteroP[i],5]= paste(X1[UteroP[i],5], "Utero", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(OvariosP)){
+  if(X1[OvariosP[i],5]=="NA"){
+    X1[OvariosP[i],5]= "Ovarios"}else{
+      X1[OvariosP[i],5]= paste(X1[OvariosP[i],5], "Ovarios", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(IntestinoP)){
+  if(X1[IntestinoP[i],5]=="NA"){
+    X1[IntestinoP[i],5]= "Intestino"}else{
+      X1[IntestinoP[i],5]= paste(X1[IntestinoP[i],5], "Intestino", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(EscrotoP)){
+  if(X1[EscrotoP[i],5]=="NA"){
+    X1[EscrotoP[i],5]= "Escroto"}else{
+      X1[EscrotoP[i],5]= paste(X1[EscrotoP[i],5], "Escroto", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(FigadoP)){
+  if(X1[FigadoP[i],5]=="NA"){
+    X1[FigadoP[i],5]= "Figado"}else{
+      X1[FigadoP[i],5]= paste(X1[FigadoP[i],5], "Figado", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(ProstataP)){
+  if(X1[ProstataP[i],5]=="NA"){
+    X1[ProstataP[i],5]= "Prostata"}else{
+      X1[ProstataP[i],5]= paste(X1[ProstataP[i],5], "Prostata", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(AdrenalP)){
+  if(X1[AdrenalP[i],5]=="NA"){
+    X1[AdrenalP[i],5]= "Adrenal"}else{
+      X1[AdrenalP[i],5]= paste(X1[AdrenalP[i],5], "Adrenal", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(BexigaP)){
+  if(X1[BexigaP[i],5]=="NA"){
+    X1[BexigaP[i],5]= "Bexiga"}else{
+      X1[BexigaP[i],5]= paste(X1[BexigaP[i],5], "Bexiga", sep = ";")
+    }
+}
+
+
+i=1
+for(i in 1:length(Vias_biliaresP)){
+  if(X1[Vias_biliaresP[i],5]=="NA"){
+    X1[Vias_biliaresP[i],5]= "Vias biliares"}else{
+      X1[Vias_biliaresP[i],5]= paste(X1[Vias_biliaresP[i],5], "Vias biliares", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(EstomagoP)){
+  if(X1[EstomagoP[i],5]=="NA"){
+    X1[EstomagoP[i],5]= "Estomago"}else{
+      X1[EstomagoP[i],5]= paste(X1[EstomagoP[i],5], "Estomago", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(BacoP)){
+  if(X1[BacoP[i],5]=="NA"){
+    X1[BacoP[i],5]= "Baco"}else{
+      X1[BacoP[i],5]= paste(X1[BacoP[i],5], "Baco", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(GastrointestinalP)){
+  if(X1[GastrointestinalP[i],5]=="NA"){
+    X1[GastrointestinalP[i],5]= "Gastrointestinal"}else{
+      X1[GastrointestinalP[i],5]= paste(X1[GastrointestinalP[i],5], "Gastrointestinal", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(GenitourinarioP)){
+  if(X1[GenitourinarioP[i],5]=="NA"){
+    X1[GenitourinarioP[i],5]= "Genitourinario"}else{
+      X1[GenitourinarioP[i],5]= paste(X1[GenitourinarioP[i],5], "Genitourinario", sep = ";")
+    }
+}
+
+
+
+
+
+
+
+
+########
+i=1
+InflamatorioP<-array()
+for(i in 1:length(Inflamatorio)){
+  InflamatorioP<<-c(InflamatorioP, grep(Inflamatorio[i], X1$RelevantData, ignore.case = T))
+}
+InflamatorioP<-InflamatorioP[-1]
+InflamatorioP<-(unique(InflamatorioP))
+########
+i=1
+NeoplasicoP<-array()
+for(i in 1:length(Neoplasico)){
+  NeoplasicoP<<-c(NeoplasicoP, grep(Neoplasico[i], X1$RelevantData, ignore.case = T))
+}
+NeoplasicoP<-NeoplasicoP[-1]
+NeoplasicoP<-(unique(NeoplasicoP))
+########
+i=1
+VascularP<-array()
+for(i in 1:length(Vascular)){
+  VascularP<<-c(VascularP, grep(Vascular[i], X1$RelevantData, ignore.case = T))
+}
+VascularP<-VascularP[-1]
+VascularP<-(unique(VascularP))
+
+########
+i=1
+VariadosP<-array()
+for(i in 1:length(Variados)){
+  VariadosP<<-c(VariadosP, grep(Variados[i], X1$RelevantData, ignore.case = T))
+}
+VariadosP<-VariadosP[-1]
+VariadosP<-(unique(VariadosP))
+
+########
+i=1
+InfecciosoP<-array()
+for(i in 1:length(Infeccioso)){
+  InfecciosoP<<-c(InfecciosoP, grep(Infeccioso[i], X1$RelevantData, ignore.case = T))
+}
+InfecciosoP<-InfecciosoP[-1]
+InfecciosoP<-(unique(InfecciosoP))
+
+########
+i=1
+UrgenciaP<-array()
+for(i in 1:length(Urgencia)){
+  UrgenciaP<<-c(UrgenciaP, grep(Urgencia[i], X1$RelevantData, ignore.case = T))
+}
+UrgenciaP<-UrgenciaP[-1]
+UrgenciaP<-(unique(UrgenciaP))
+
+#######
+
+#Putting organ name into column
+#####
+i=1
+for(i in 1:length(InflamatorioP)){
+  if(X1[InflamatorioP[i],5]=="#N/DISP"){
+    X1[InflamatorioP[i],5]= "Inflamatorio"}else{
+      X1[InflamatorioP[i],5]= paste(X1[InflamatorioP[i],5], "Inflamatorio", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(NeoplasicoP)){
+  if(X1[NeoplasicoP[i],5]=="#N/DISP"){
+    X1[NeoplasicoP[i],5]= "Neoplasico"}else{
+      X1[NeoplasicoP[i],5]= paste(X1[NeoplasicoP[i],5], "Neoplasico", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(VascularP)){
+  if(X1[VascularP[i],5]=="#N/DISP"){
+    X1[VascularP[i],5]= "Vascular"}else{
+      X1[VascularP[i],5]= paste(X1[VascularP[i],5], "Vascular", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(VariadosP)){
+  if(X1[VariadosP[i],5]=="#N/DISP"){
+    X1[VariadosP[i],5]= "Variados"}else{
+      X1[VariadosP[i],5]= paste(X1[VariadosP[i],5], "Variados", sep = ";")
+    }
+}
+i=1
+for(i in 1:length(InfecciosoP)){
+  if(X1[InfecciosoP[i],5]=="#N/DISP"){
+    X1[InfecciosoP[i],5]= "Infeccioso"}else{
+      X1[InfecciosoP[i],5]= paste(X1[InfecciosoP[i],5], "Infeccioso", sep = ";")
+    }
+}
+
+i=1
+for(i in 1:length(UrgenciaP)){
+  if(X1[UrgenciaP[i],5]=="#N/DISP"){
+    X1[UrgenciaP[i],5]= "Urgencia"}else{
+      X1[UrgenciaP[i],5]= paste(X1[UrgenciaP[i],5], "Urgencia", sep = ";")
+    }
+}
+
+
+
+
+
+write.csv(X1, file = "MasterTable.csv")
